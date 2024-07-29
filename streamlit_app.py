@@ -64,14 +64,6 @@ if st.session_state.section == "Home":
     }
     st.bar_chart(data)
     
-    # Sample data table
-    st.write("Here is a sample data table:")
-    import pandas as pd
-    df = pd.DataFrame({
-        'Column 1': [1, 2, 3],
-        'Column 2': ['A', 'B', 'C']
-    })
-    st.write(df)
 
 elif st.session_state.section == "About the Team":
     st.header("About the Team")
