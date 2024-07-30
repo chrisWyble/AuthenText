@@ -1,13 +1,16 @@
-import streamlit as st
-import pickle
-from helper_functions import write_text, run_binoculars
+from imports import st, pickle
+from helper_functions import write_text, run_binoculars, view_pdf
 
 # Function to manage navigation
 def navigate_to(section):
     st.session_state.section = section
 
 # Set the title of the app
-st.title("AuthenText")
+st.markdown("""
+    <h1 style='font-size: 56px; text-align: center; opacity: 0.7;'>
+        <span style='color: #2030DF;'>Authen</span><span style='color: black;'>Text</span>
+    </h1>
+    """, unsafe_allow_html=True)
 
 # Initialize session state
 if 'section' not in st.session_state:
@@ -27,7 +30,7 @@ def clear_credentials():
     st.session_state.student_fn = ""
 
 # Add a sidebar with a logo and navigation buttons
-st.sidebar.image("logo.png", width=100)  # Adjust the path to your logo file
+st.sidebar.image("logo.png", width=100) 
 st.sidebar.title("Navigation")
 
 # Navigation buttons
@@ -42,12 +45,14 @@ if st.session_state.section == "Home":
     st.write("Welcome to AuthenText app!")
     
     # File uploader
-    uploaded_file = st.file_uploader("Choose a file")
-    if uploaded_file is not None:
-        file_content = uploaded_file.read().decode("utf-8")
-        
-        # Display the file's content in a text area
-        st.text_area("File Content", file_content, height=250)
+    uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True)
+    if uploaded_files:
+        if uploaded_files[0].name.endswith('pdf'): 
+            view_pdf(uploaded_files)
+        else:
+            # Previews the first file uploaded
+            file_content = uploaded_files[0].read().decode("utf-8")
+            st.text_area("File Content", file_content, height=250)
     
     # Student ID
     student_id = st.text_input("", value=st.session_state.student_id, placeholder="Student ID*").strip()
@@ -67,7 +72,7 @@ if st.session_state.section == "Home":
         if st.button("Clear"):
             clear_credentials()
     with col2:
-        scan_disabled = not (student_id and student_ln and student_fn and uploaded_file)
+        scan_disabled = not (student_id and student_ln and student_fn and uploaded_files)
         
         st.button("Scan Essay", disabled=scan_disabled, on_click=run_binoculars())
 
