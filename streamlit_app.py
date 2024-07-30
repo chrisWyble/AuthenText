@@ -1,5 +1,6 @@
 import streamlit as st
-from helper_functions import write_text
+import pickle
+from helper_functions import write_text, run_binoculars
 
 # Function to manage navigation
 def navigate_to(section):
@@ -11,6 +12,19 @@ st.title("AuthenText")
 # Initialize session state
 if 'section' not in st.session_state:
     st.session_state.section = 'Home'
+    st.session_state.student_id = ""
+    st.session_state.student_ln = ""
+    st.session_state.student_fn = ""
+
+# # Load in Binoculars Model
+# with open('model.pkl', 'rb') as file:
+#     model = pickle.load(file)
+
+# Function to clear the student credentials
+def clear_credentials():
+    st.session_state.student_id = ""
+    st.session_state.student_ln = ""
+    st.session_state.student_fn = ""
 
 # Add a sidebar with a logo and navigation buttons
 st.sidebar.image("logo.png", width=100)  # Adjust the path to your logo file
@@ -25,45 +39,43 @@ st.sidebar.button("Citations", on_click=navigate_to, args=("Citations",))
 
 # Define content for each section
 if st.session_state.section == "Home":
-    st.write("Welcome to my AuthenText app!")
-    st.write("This is a simple boilerplate to get you started.")
+    st.write("Welcome to AuthenText app!")
     
     # File uploader
     uploaded_file = st.file_uploader("Choose a file")
     if uploaded_file is not None:
-        st.write("File uploaded!")
-        # Process the uploaded file if needed
+        file_content = uploaded_file.read().decode("utf-8")
+        
+        # Display the file's content in a text area
+        st.text_area("File Content", file_content, height=250)
     
     # Student ID
-    student_id = st.text_input("", placeholder="Student ID*").strip()
-    if student_id:
-        st.write(f"Student ID: {student_id}")
+    student_id = st.text_input("", value=st.session_state.student_id, placeholder="Student ID*").strip()
+    st.session_state.student_id = student_id
     
     # Student Last Name
-    student_ln = st.text_input("",placeholder="Student's Last Name*").strip().title()
-    if student_ln:
-        st.write(f"Last Name: {student_ln}")
-
+    student_ln = st.text_input("", value=st.session_state.student_ln, placeholder="Student's Last Name*").strip().title()
+    st.session_state.student_ln = student_ln
+    
     # Student First Name
-    student_fn = st.text_input("",placeholder="Student's First Name*").strip().title()
-    if student_fn:
-        st.write(f"First Name: {student_fn}")
+    student_fn = st.text_input("", value=st.session_state.student_fn, placeholder="Student's First Name*").strip().title()
+    st.session_state.student_fn = student_fn
+    
+    # Layout for buttons
+    col1, col2 = st.columns(spec=[0.85,0.15])
+    with col1:
+        if st.button("Clear"):
+            clear_credentials()
+    with col2:
+        scan_disabled = not (student_id and student_ln and student_fn and uploaded_file)
+        
+        st.button("Scan Essay", disabled=scan_disabled, on_click=run_binoculars())
 
     
-    # Button for Student Name
-    if st.button("Submit Student Credentials"):
-        if student_ln and student_fn and student_id:
-            st.write("Student credentials:")
-            st.write(f"{student_id}: {student_ln}, {student_fn}")
-    
-    # Sample chart
-    st.write("Here is a sample chart:")
-    data = {
-        'Category': ['A', 'B', 'C'],
-        'Values': [10, 20, 30]
-    }
-    st.bar_chart(data)
-    
+    # Output for Student Creds
+    if student_ln and student_fn and student_id:
+        st.write("Student credentials:")
+        st.write(f"{student_id}: {student_ln}, {student_fn}")
 
 elif st.session_state.section == "About the Team":
     st.header("About the Team")

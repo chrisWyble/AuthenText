@@ -7,3 +7,6 @@ def write_text(page):
         return 'disclaimer'
     if page == 'citations':
         return 'citations'
+
+def run_binoculars(verbose=True):
+    pass

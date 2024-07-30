@@ -5,3 +5,7 @@ primaryColor="#000000" # You can change this if you want a different primary col
 backgroundColor="#ffffff"
 secondaryBackgroundColor="#f0f0f0"
 textColor="#000000"
+
+[server]
+enableXsrfProtection = false
+enableCORS = false
