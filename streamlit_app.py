@@ -1,9 +1,12 @@
-from imports import st, pickle
-from helper_functions import write_text, run_binoculars, view_pdf
+import helper_functions 
+from imports import st, requests
 
 # Function to manage navigation
 def navigate_to(section):
     st.session_state.section = section
+
+
+st.markdown(f"""{helper_functions.get_ec2_public_ip()}""")
 
 # Set the title of the app
 st.markdown("""
@@ -19,9 +22,6 @@ if 'section' not in st.session_state:
     st.session_state.student_ln = ""
     st.session_state.student_fn = ""
 
-# # Load in Binoculars Model
-# with open('model.pkl', 'rb') as file:
-#     model = pickle.load(file)
 
 # Function to clear the student credentials
 def clear_credentials():
@@ -48,7 +48,7 @@ if st.session_state.section == "Home":
     uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True)
     if uploaded_files:
         if uploaded_files[0].name.endswith('pdf'): 
-            view_pdf(uploaded_files)
+            helper_functions.view_pdf(uploaded_files)
         else:
             # Previews the first file uploaded
             file_content = uploaded_files[0].read().decode("utf-8")
@@ -74,7 +74,7 @@ if st.session_state.section == "Home":
     with col2:
         scan_disabled = not (student_id and student_ln and student_fn and uploaded_files)
         
-        st.button("Scan Essay", disabled=scan_disabled, on_click=run_binoculars())
+        st.button("Scan Essay", disabled=scan_disabled, on_click=helper_functions.run_binoculars(uploaded_files))
 
     
     # Output for Student Creds
@@ -84,20 +84,20 @@ if st.session_state.section == "Home":
 
 elif st.session_state.section == "About the Team":
     st.header("About the Team")
-    st.write(write_text('team'))
+    st.write(helper_functions.write_text('team'))
     # Add more content about the team
 
 elif st.session_state.section == "Instructions":
     st.header("Instructions")
-    st.write(write_text('instructions'))
+    st.write(helper_functions.write_text('instructions'))
     # Add more detailed instructions
 
 elif st.session_state.section == "Disclaimer":
     st.header("Disclaimer")
-    st.write(write_text('disclaimer'))
+    st.write(helper_functions.write_text('disclaimer'))
     # Add more disclaimer information
 
 elif st.session_state.section == "Citations":
     st.header("Citations")
-    st.write(write_text('citations'))
+    st.write(helper_functions.write_text('citations'))
     # Add more citations and references
