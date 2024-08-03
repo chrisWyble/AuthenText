@@ -5,9 +5,6 @@ from imports import st, requests
 def navigate_to(section):
     st.session_state.section = section
 
-
-st.markdown(f"""{helper_functions.get_ec2_public_ip()}""")
-
 # Set the title of the app
 st.markdown("""
     <h1 style='font-size: 56px; text-align: center; opacity: 0.7;'>

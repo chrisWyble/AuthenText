@@ -35,7 +35,7 @@ def run_binoculars(text, verbose=True):
     # Get the LLM server IP dynamically
     llm_server_ip = get_ec2_public_ip()
     LLM_SERVER_URL = f'http://{llm_server_ip}:5000/predict'
-    text = 'from client to server and back again :D'
+    text = 'Let us go'
     try:
         response = requests.post(LLM_SERVER_URL, json={'text': text}) 
         response_data = response.json()
