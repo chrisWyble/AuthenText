@@ -14,7 +14,7 @@ st.markdown("""
 
 # Initialize session state
 if 'section' not in st.session_state:
-    st.session_state.section = 'Home'
+    st.session_state.section = 'Instructions'
     st.session_state.student_id = ""
     st.session_state.student_ln = ""
     st.session_state.student_fn = ""
@@ -64,15 +64,15 @@ if st.session_state.section == "Home":
     st.session_state.student_fn = student_fn
     
     # Layout for buttons
-    col1, col2 = st.columns(spec=[0.85,0.15])
+    col1, col2 = st.columns(spec=[0.89,0.11])
     with col1:
-        if st.button("Clear"):
-            clear_credentials()
-    with col2:
         scan_disabled = not (student_id and student_ln and student_fn and uploaded_files)
         
-        st.button("Scan Essay", disabled=scan_disabled, on_click=helper_functions.run_binoculars(uploaded_files))
-
+        if st.button("Scan Essay", disabled=scan_disabled):
+            helper_functions.run_binoculars(uploaded_files)
+    with col2:
+        if st.button("Clear"):
+            clear_credentials()
     
     # Output for Student Creds
     if student_ln and student_fn and student_id:

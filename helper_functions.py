@@ -31,13 +31,20 @@ def get_ec2_public_ip(instance_id='i-0800501d08d7bdc6f', region_name='us-east-1'
 
 
 
-def run_binoculars(text, verbose=True):
+def run_binoculars(files, verbose=True):
     # Get the LLM server IP dynamically
     llm_server_ip = get_ec2_public_ip()
     LLM_SERVER_URL = f'http://{llm_server_ip}:5000/predict'
-    text = 'Let us go'
+    
+    text_lst = []
+    for f in files:
+        file_content = ''
+        for p in PdfReader(f).pages:
+            file_content += p.extract_text()
+        text_lst.append(file_content)
+    
     try:
-        response = requests.post(LLM_SERVER_URL, json={'text': text}) 
+        response = requests.post(LLM_SERVER_URL, json={'text': text_lst}) 
         response_data = response.json()
         st.markdown(str(response_data))
     except requests.exceptions.RequestException as e:
