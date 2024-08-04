@@ -82,14 +82,28 @@ if st.session_state.section == "Home":
 elif st.session_state.section == "About the Team":
     st.header("About the Team")
     st.write(helper_functions.write_text('team'))
-    st.markdown("Brendan Ho")
-    st.markdown("Chris Wyble")
-    st.markdown("Terence Pak")
+    col1, col2, col3=st.columns([1,1,1])
+    with col1:
+        st.image("Brendan Ho.png", width=195)
+        st.markdown("""
+            <h2 style='font-size: 24px; text-align: center;'>Brendan Ho</h2>""", unsafe_allow_html=True)
+    with col2:
+        st.image("Chris Wyble.png", width=195)
+        st.markdown("""
+            <h2 style='font-size: 24px; text-align: center;'>Chris Wyble</h2>""", unsafe_allow_html=True)
+    with col3:
+        st.image("Terence Pak.png", width=195)
+        st.markdown("""
+            <h2 style='font-size: 24px; text-align: center;'>Terence Pak</h2>""", unsafe_allow_html=True)
 
 elif st.session_state.section == "Instructions":
     st.header("Instructions")
     st.write(helper_functions.write_text('instructions'))
-    # Add more detailed instructions
+    st.markdown("**Please follow the instructions listed below.**")
+    st.markdown("- Refer to the 'Choose a file' prompt and click 'Browse files.'")
+    st.markdown("- Locate and select the PDF file that you would like to evaluate and click 'Open'")
+    st.markdown("- Fill out student information including Student ID, First Name, and Last Name")
+    st.markdown("- Select the 'Scan Essay' button. The MGT determination will appear below")
 
 elif st.session_state.section == "Disclaimer":
     st.header("Disclaimer")
@@ -99,4 +113,5 @@ elif st.session_state.section == "Disclaimer":
 elif st.session_state.section == "Citations":
     st.header("Citations")
     st.write(helper_functions.write_text('citations'))
+
     # Add more citations and references
