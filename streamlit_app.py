@@ -82,7 +82,9 @@ if st.session_state.section == "Home":
 elif st.session_state.section == "About the Team":
     st.header("About the Team")
     st.write(helper_functions.write_text('team'))
-    # Add more content about the team
+    st.markdown("Brendan Ho")
+    st.markdown("Chris Wyble")
+    st.markdown("Terence Pak")
 
 elif st.session_state.section == "Instructions":
     st.header("Instructions")
