@@ -1,5 +1,6 @@
 import helper_functions 
 from imports import st, requests
+from streamlit_pdf_viewer import pdf_viewer
 
 # Function to manage navigation
 def navigate_to(section):
@@ -42,14 +43,22 @@ if st.session_state.section == "Home":
     st.write("Welcome to AuthenText app!")
     
     # File uploader
-    uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True, type=('pdf'))
+
     if uploaded_files:
-        if uploaded_files[0].name.endswith('pdf'): 
-            helper_functions.view_pdf(uploaded_files)
-        else:
-            # Previews the first file uploaded
-            file_content = uploaded_files[0].read().decode("utf-8")
-            st.text_area("File Content", file_content, height=250)
+        binary_data = uploaded_files[0].getvalue()
+        st.write("PDF preview:")
+        with st.container(border=True, height=300):
+            pdf_viewer(
+                input=binary_data,
+                width=700,
+            )
+    #     if uploaded_files[0].name.endswith('pdf'): 
+    #         helper_functions.view_pdf(uploaded_files)
+    #     else:
+    #         # Previews the first file uploaded
+    #         file_content = uploaded_files[0].read().decode("utf-8")
+    #         st.text_area("File Content", file_content, height=250)
     
     # Student ID
     student_id = st.text_input("", value=st.session_state.student_id, placeholder="Student ID*").strip()
