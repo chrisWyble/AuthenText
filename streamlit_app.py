@@ -109,9 +109,21 @@ elif st.session_state.section == "Disclaimer":
     st.header("Disclaimer")
     st.write(helper_functions.write_text('disclaimer'))
     # Add more disclaimer information
+    st.markdown("**Please refeer to the following disclaimers below.**")
+    st.markdown("- This MGT detection tool was optimized for a false positive rate of 1%.")
+    st.markdown("- This is an MGT detection tool. It is not meant to capture plagiarism.")
+    st.markdown("- Educators should always cross-check positive results.")
+    st.markdown("- Educators need to be cognizant of incorrect results, use social context, and must be the one to make the final decision.")
+    st.markdown("- Students should be informed about the existence of this tool and that their data will only be used for MGT evaluation.")
 
 elif st.session_state.section == "Citations":
     st.header("Citations")
     st.write(helper_functions.write_text('citations'))
+    st.markdown("**References can be seen below.**")
+    st.write("[1] Spotting LLMs With Binoculars [link](https://share.streamlit.io/mesmith027/streamlit_webapps/main/MC_pi/streamlit_app.py)")
+    st.write("[2] DAIGT Dataset [link](https://www.kaggle.com/datasets/xiranhu/daigt-proper-train-dataset)")
+    st.write("[3] MGT Student Usage [link](https://www.forbes.com/sites/chriswestfall/2023/01/28/educators-battle-plagiarism-as-89-of-students-admit-to-using-open-ais-chatgpt-for-homework/?sh=64ffc7ec750d)")
+    st.write("[4] MGT Identified by Educators [link](https://medium.com/@ajaykrishna.m1237890/teachers-struggle-to-identify-ai-written-texts-6488ed83bc13)")
+    st.write("[5] Available MGT detection tools are unreliable [link](https://edintegrity.biomedcentral.com/articles/10.1007/s40979-023-00146-z#Sec18)")
 
     # Add more citations and references
