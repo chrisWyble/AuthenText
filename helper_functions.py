@@ -53,7 +53,7 @@ def run_binoculars(files, verbose=True):
     try:
         response = requests.post(LLM_SERVER_URL, json={'text': text_lst}) 
         response_data = response.json()
-        st.markdown(str(response_data['response']))
+        # st.markdown(str(response_data['response']))
         return response_data['response']
     except requests.exceptions.RequestException as e:
         return {'error': str(e)}

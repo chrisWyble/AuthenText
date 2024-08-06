@@ -1,7 +1,10 @@
 import helper_functions
-import style
+import pandas as pd
+# import style
 
 from imports import st
+
+from streamlit_pdf_viewer import pdf_viewer
 
 # Function to manage navigation
 def navigate_to(section):
@@ -20,15 +23,15 @@ if 'section' not in st.session_state:
     st.session_state.student_id = ""
     st.session_state.student_ln = ""
     st.session_state.student_fn = ""
-    st.session_state.mgt_status = ""
+    st.session_state.file_uploader_key = 0
+    st.session_state.uploaded_files = []
+    st.session_state.binary_data = None
 
-
-# Function to clear the student credentials
+# Function to clear the student credentials and uploaded files
 def clear_credentials():
     st.session_state.student_id = ""
     st.session_state.student_ln = ""
     st.session_state.student_fn = ""
-    st.session_state.pdf_view = ""
 
 # Add a sidebar with a logo and navigation buttons
 st.sidebar.image("logo.png", width=100) 
@@ -47,15 +50,25 @@ if st.session_state.section == "Home":
     st.write("Welcome to AuthenText app!")
     
     # File uploader
-    uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True)
-    if uploaded_files:
-        if uploaded_files[0].name.endswith('pdf'): 
-            helper_functions.view_pdf(uploaded_files)
+    uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True, type=('pdf'), key=st.session_state["file_uploader_key"])
 
-        else:
-            # Previews the first file uploaded
-            file_content = uploaded_files[0].read().decode("utf-8")
-            st.text_area("File Content", file_content, height=250)
+    if uploaded_files:
+        st.session_state.uploaded_files = uploaded_files
+        binary_data = uploaded_files[0].getvalue()
+        st.session_state.binary_data = binary_data
+        st.write("PDF preview:")
+        with st.container(border=True, height=300):
+            pdf_viewer(
+                input=binary_data,
+                width=700,
+            )
+    #     if uploaded_files[0].name.endswith('pdf'): 
+    #         helper_functions.view_pdf(uploaded_files)
+    #     else:
+    #         # Previews the first file uploaded
+    #         file_content = uploaded_files[0].read().decode("utf-8")
+    #         st.text_area("File Content", file_content, height=250)
+    
     
     # Student ID
     student_id = st.text_input("", value=st.session_state.student_id, placeholder="Student ID*").strip()
@@ -75,7 +88,9 @@ if st.session_state.section == "Home":
     scan_disabled = not (student_id and student_ln and student_fn and uploaded_files)  
     with col1:  
         if st.button("Scan for MGT", disabled=scan_disabled):
-            st.session_state.mgt_status = helper_functions.run_binoculars(uploaded_files)
+            response = helper_functions.run_binoculars(uploaded_files)
+            scan_succesful = True
+
             
     with col2:
         archive_cond = st.session_state.mgt_status and not scan_disabled
@@ -87,11 +102,23 @@ if st.session_state.section == "Home":
     with col3:
         if st.button("Clear"):
             clear_credentials()
+            st.session_state["file_uploader_key"] += 1
+            st.rerun()
     
     # Output for Student Creds
-    if student_ln and student_fn and student_id:
-        st.write("Student credentials:")
-        st.write(f"{student_id}: {student_ln}, {student_fn}")
+    # if student_ln and student_fn and student_id:
+    #     st.write("Student credentials:")
+    #     st.write(f"{student_id}: {student_ln}, {student_fn}")
+
+    if scan_succesful:
+        st.success("✅ Done!")
+        
+        st.markdown('## Results')
+        
+        filename_list = [upload.name for upload in uploaded_files]
+
+        df = pd.DataFrame({'Filename': filename_list, 'MGT Detected?': response})
+        st.write(df)
 
 elif st.session_state.section == "About the Team":
     st.header("About the Team")
