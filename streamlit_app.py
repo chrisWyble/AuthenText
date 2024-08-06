@@ -120,15 +120,15 @@ elif st.session_state.section == "About the Team":
     st.header("About the Team")
     col1, col2, col3=st.columns([1,1,1])
     with col1:
-        st.image("Brendan Ho.png", width=195)
+        st.image("team_pictures/Brendan Ho.png", width=195)
         st.markdown("""
             <h2 style='font-size: 24px; text-align: center;'>Brendan Ho</h2>""", unsafe_allow_html=True)
     with col2:
-        st.image("Chris Wyble.png", width=195)
+        st.image("team_pictures/Chris Wyble.png", width=195)
         st.markdown("""
             <h2 style='font-size: 24px; text-align: center;'>Chris Wyble</h2>""", unsafe_allow_html=True)
     with col3:
-        st.image("Terence Pak.png", width=195)
+        st.image("team_pictures/Terence Pak.png", width=195)
         st.markdown("""
             <h2 style='font-size: 24px; text-align: center;'>Terence Pak</h2>""", unsafe_allow_html=True)
 

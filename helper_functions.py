@@ -63,54 +63,22 @@ def archive(creds, files, mgt_status):
         return {'error': str(e)}
 
 def view_archive():
-    try:
-        # Initialize a session using your AWS credentials
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=os.getenv('aws_access_key_id'),
-            aws_secret_access_key=os.getenv('aws_secret_access_key')
-        )
-
-        s3_resource = boto3.resource(
-                        's3',
-                        aws_access_key_id=os.getenv('aws_access_key_id'),
-                        aws_secret_access_key=os.getenv('aws_secret_access_key')
-                    )
-        
-        bucket_name = 'authen-text-archive'
     
-        # Listing out the objects in a bucket
-        essay_trainning_bucket = s3_resource.Bucket(name = bucket_name)
-        keys = [object.key for object in essay_trainning_bucket.objects.all()]
-
-        series_lst = []
-
-        for file_key in keys:
-            # Download the file from S3 to a string buffer
-            obj = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-            data = obj['Body'].read().decode('utf-8')
-            
-            
-            # Use StringIO to convert the string data to a pandas-readable buffer
-            data_buffer = StringIO(data)
-            
-            # Read the data into a pandas DataFrame
-            series = pd.read_json(data_buffer, typ='series')
-            
-            series['text'] = series['text'][:60] if len(series['text']) > 60 else series['text']
-            series['mgt_status'] = 'Yes' if series['mgt_status'] else 'No'
-            series['Document'] = file_key.split('.')[0].split('__')[1]
-            series['Student ID'] = file_key.split('/')[0]
-
-            series_lst.append(series)
+    llm_server_ip = get_ec2_public_ip()
+    LLM_SERVER_URL = f'http://{llm_server_ip}:5000/view_archive'
+    
+    try:
+        response = requests.get(LLM_SERVER_URL) 
+        response_data = response.json()
+        res = response_data['response']
         
-        df = pd.DataFrame(series_lst)
-        df = df[['Student ID', 'Document', 'text', 'mgt_status']]
-        df.set_index('Student ID',inplace=True)
-        df.rename(columns={'mgt_status':'Potential MGT Detected'}, inplace=True)
-        st.dataframe(df)
-    except Exception as e:
-        print(e)
+    except requests.exceptions.RequestException as e:
+        return {'error': str(e)}
+    
+    df = pd.DataFrame(res)
+    df.set_index('Student ID', inplace=True)
+    st.dataframe(df)
+    
         
 
 
