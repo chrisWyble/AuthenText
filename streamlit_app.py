@@ -96,21 +96,50 @@ if st.session_state.section == "Home":
 elif st.session_state.section == "About the Team":
     st.header("About the Team")
     st.write(helper_functions.write_text('team'))
-    # Add more content about the team
+    col1, col2, col3=st.columns([1,1,1])
+    with col1:
+        st.image("Brendan Ho.png", width=195)
+        st.markdown("""
+            <h2 style='font-size: 24px; text-align: center;'>Brendan Ho</h2>""", unsafe_allow_html=True)
+    with col2:
+        st.image("Chris Wyble.png", width=195)
+        st.markdown("""
+            <h2 style='font-size: 24px; text-align: center;'>Chris Wyble</h2>""", unsafe_allow_html=True)
+    with col3:
+        st.image("Terence Pak.png", width=195)
+        st.markdown("""
+            <h2 style='font-size: 24px; text-align: center;'>Terence Pak</h2>""", unsafe_allow_html=True)
 
 elif st.session_state.section == "Instructions":
     st.header("Instructions")
     st.write(helper_functions.write_text('instructions'))
-    # Add more detailed instructions
+    st.markdown("**Please follow the instructions listed below.**")
+    st.markdown("- Refer to the 'Choose a file' prompt and click 'Browse files.'")
+    st.markdown("- Locate and select the PDF file that you would like to evaluate and click 'Open'")
+    st.markdown("- Fill out student information including Student ID, First Name, and Last Name")
+    st.markdown("- Select the 'Scan Essay' button. The MGT determination will appear below")
 
 elif st.session_state.section == "Disclaimer":
     st.header("Disclaimer")
     st.write(helper_functions.write_text('disclaimer'))
     # Add more disclaimer information
+    st.markdown("**Please refeer to the following disclaimers below.**")
+    st.markdown("- This MGT detection tool was optimized for a false positive rate of 1%.")
+    st.markdown("- This is an MGT detection tool. It is not meant to capture plagiarism.")
+    st.markdown("- Educators should always cross-check positive results.")
+    st.markdown("- Educators need to be cognizant of incorrect results, use social context, and must be the one to make the final decision.")
+    st.markdown("- Students should be informed about the existence of this tool and that their data will only be used for MGT evaluation.")
 
 elif st.session_state.section == "Citations":
     st.header("Citations")
     st.write(helper_functions.write_text('citations'))
+    st.markdown("**References can be seen below.**")
+    st.write("[1] Spotting LLMs With Binoculars [link](https://share.streamlit.io/mesmith027/streamlit_webapps/main/MC_pi/streamlit_app.py)")
+    st.write("[2] DAIGT Dataset [link](https://www.kaggle.com/datasets/xiranhu/daigt-proper-train-dataset)")
+    st.write("[3] MGT Student Usage [link](https://www.forbes.com/sites/chriswestfall/2023/01/28/educators-battle-plagiarism-as-89-of-students-admit-to-using-open-ais-chatgpt-for-homework/?sh=64ffc7ec750d)")
+    st.write("[4] MGT Identified by Educators [link](https://medium.com/@ajaykrishna.m1237890/teachers-struggle-to-identify-ai-written-texts-6488ed83bc13)")
+    st.write("[5] Available MGT detection tools are unreliable [link](https://edintegrity.biomedcentral.com/articles/10.1007/s40979-023-00146-z#Sec18)")
+
     # Add more citations and references
 
 elif st.session_state.section == "Archive":
