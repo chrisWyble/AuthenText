@@ -3,5 +3,5 @@ streamlit
 PyPDF2
 requests
 boto3
-streamlit_pdf_viewer
+streamlit-pdf-viewer
 pandas

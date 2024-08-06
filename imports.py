@@ -6,3 +6,4 @@ import pandas as pd
 
 from io import StringIO
 from PyPDF2 import PdfReader
+from streamlit_pdf_viewer import pdf_viewer
