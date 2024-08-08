@@ -44,13 +44,7 @@ st.sidebar.button("Citations", on_click=navigate_to, args=("Citations",))
 
 # Define content for each section
 if st.session_state.section == "Home":
-    # st.markdown("**Our mission is to help educators catch MGT in K-12th grade student essays with a Machine-Generated Text (MGT) detection tool.**")
-    # st.markdown("- Refer to the 'Choose a file' prompt and click 'Browse files.'")
-    # st.markdown("- Locate and select the PDF file(s) that you would like to evaluate and click 'Open'")
-    # st.markdown("- Fill out student information including Student ID, First Name, and Last Name")
-    # st.markdown("- Select the 'Scan Essay' button. The MGT determination will appear below")
-    # st.markdown("- If you desire, you may select the 'Archive' button to store and later view the checked essay(s)")
-    
+
     # File uploader
     uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True, type=('pdf'), key=st.session_state["file_uploader_key"])
 
