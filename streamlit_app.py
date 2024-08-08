@@ -15,7 +15,7 @@ st.markdown("""
 
 # Initialize session state
 if 'section' not in st.session_state:
-    st.session_state.section = 'Instructions'
+    st.session_state.section = 'Home'
     st.session_state.student_id = ""
     st.session_state.student_ln = ""
     st.session_state.student_fn = ""
@@ -36,15 +36,20 @@ st.sidebar.title("Navigation")
 
 # Navigation buttons
 st.sidebar.button("Home", on_click=navigate_to, args=("Home",))
-st.sidebar.button("About the Team", on_click=navigate_to, args=("About the Team",))
 st.sidebar.button("Instructions", on_click=navigate_to, args=("Instructions",))
-st.sidebar.button("Disclaimer", on_click=navigate_to, args=("Disclaimer",))
 st.sidebar.button("Archive", on_click=navigate_to, args=("Archive",))
+st.sidebar.button("Disclaimer", on_click=navigate_to, args=("Disclaimer",))
+st.sidebar.button("About the Team", on_click=navigate_to, args=("About the Team",))
 st.sidebar.button("Citations", on_click=navigate_to, args=("Citations",))
 
 # Define content for each section
 if st.session_state.section == "Home":
-    st.write("Welcome to AuthenText app!")
+    # st.markdown("**Our mission is to help educators catch MGT in K-12th grade student essays with a Machine-Generated Text (MGT) detection tool.**")
+    # st.markdown("- Refer to the 'Choose a file' prompt and click 'Browse files.'")
+    # st.markdown("- Locate and select the PDF file(s) that you would like to evaluate and click 'Open'")
+    # st.markdown("- Fill out student information including Student ID, First Name, and Last Name")
+    # st.markdown("- Select the 'Scan Essay' button. The MGT determination will appear below")
+    # st.markdown("- If you desire, you may select the 'Archive' button to store and later view the checked essay(s)")
     
     # File uploader
     uploaded_files = st.file_uploader("Choose a file", accept_multiple_files=True, type=('pdf'), key=st.session_state["file_uploader_key"])
@@ -117,7 +122,6 @@ if st.session_state.section == "Home":
             st.markdown(f"- {file}")
 
 elif st.session_state.section == "About the Team":
-    # st.header("About the Team")
     st.text("")
     st.text("")
     st.markdown(f"""
@@ -151,7 +155,7 @@ elif st.session_state.section == "About the Team":
     st.text("")
     st.text("")
     with col2:
-        st.markdown("""MIDS had amazing coverage of topics for in-demand skills along side the oppertunity to work with talented peers.
+        st.markdown("""MIDS had amazing coverage of topics for in-demand skills along side the opportunity to work with talented peers.
                     For our capstone project, I lead the data and cloud engineer tasks such as AWS architecture design, developer operations, streamlit development, and assisted in model evaluation.
                     Going forward, I desire to apply data science to a variety of practical industries, specifically medical, to help others. 
                     For fun I enjoy participating in pickleball, playing super smash brothers, and watching anime.""", unsafe_allow_html=True)
@@ -182,7 +186,7 @@ elif st.session_state.section == "Instructions":
 elif st.session_state.section == "Disclaimer":
     st.header("Disclaimer")
     # Add more disclaimer information
-    st.markdown("**Please refeer to the following disclaimers below.**")
+    st.markdown("**Please refer to the following disclaimers below.**")
     st.markdown("- This MGT detection tool was optimized for a false positive rate of 1%.")
     st.markdown("- This is an MGT detection tool. It is not meant to capture plagiarism.")
     st.markdown("- Educators should always cross-check positive results.")
