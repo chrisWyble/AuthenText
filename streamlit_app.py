@@ -31,7 +31,7 @@ def clear_credentials():
     st.session_state.student_fn = ""
 
 # Add a sidebar with a logo and navigation buttons
-st.sidebar.image("logo.png", width=100) 
+st.sidebar.image("static/logo.png", width=100) 
 st.sidebar.title("Navigation")
 
 # Navigation buttons
