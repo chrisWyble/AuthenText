@@ -1,6 +1,10 @@
-import helper_functions
+import streamlit as st
+import pandas as pd
 
-from imports import pd, st, pdf_viewer
+from streamlit_pdf_viewer import pdf_viewer
+
+from helper import utils
+
 
 # Function to manage navigation
 def navigate_to(section):
@@ -79,14 +83,16 @@ if st.session_state.section == "Home":
     
     with col1:  
         if st.button("Scan for MGT", disabled=scan_disabled):
-            st.session_state.mgt_status = helper_functions.run_binoculars(uploaded_files)
-            scan_successful = True
-
+            st.session_state.mgt_status = utils.run_binoculars(uploaded_files)
+            if st.session_state.mgt_status:
+                scan_successful = True
+            else:
+                st.error('Unable to run model. Please try again later.', icon="🚨")
     with col2:
         archive_disabled = not scan_successful
         if st.button("Archive Essay(s)", disabled=archive_disabled):
             mgt_status = [1 if 'Potential' in scan else 0 for scan in st.session_state.mgt_status]
-            helper_functions.archive([student_id,student_ln,student_fn], uploaded_files, mgt_status)
+            utils.archive([student_id,student_ln,student_fn], uploaded_files, mgt_status)
             archive_successful = True
             
     with col3:
@@ -126,7 +132,7 @@ elif st.session_state.section == "About the Team":
     
     col1, col2=st.columns([11,20],vertical_alignment="center", gap='medium')
     with col1:
-        st.image("team_pictures/Brendan Ho.png", width=195)
+        st.image("static/Brendan Ho.png", width=195)
         st.markdown(f"""
             <h2 style='font-size: 24px; text-align: left;'>{'&nbsp;'*8}Brendan Ho</h2>""", unsafe_allow_html=True)
     st.text("")
@@ -142,7 +148,7 @@ elif st.session_state.section == "About the Team":
     col1, col2=st.columns([11,20],vertical_alignment="center", gap='medium')
     
     with col1:
-        st.image("team_pictures/Chris Wyble.png", width=195)
+        st.image("static/Chris Wyble.png", width=195)
         st.markdown(f"""
                 <h2 style='font-size: 24px; text-align: left;'>{'&nbsp;'*8}Chris Wyble""", unsafe_allow_html=True)
     st.text("")
@@ -157,7 +163,7 @@ elif st.session_state.section == "About the Team":
     col1, col2=st.columns([11,20],vertical_alignment="center", gap='medium')
 
     with col1:
-        st.image("team_pictures/Terence Pak.png", width=195)   
+        st.image("static/Terence Pak.png", width=195)   
         st.markdown(f"""
             <h2 style='font-size: 24px; text-align: left;'>{'&nbsp;'*8}Terence Pak</h2>""", unsafe_allow_html=True)
 
@@ -200,5 +206,9 @@ elif st.session_state.section == "Citations":
 
 elif st.session_state.section == "Archive":
     st.header("Archive")
-    helper_functions.view_archive()
+    archive_df = utils.view_archive()
+    if archive_df:
+        st.dataframe(archive_df)
+    else:
+        st.error('Could not access archive. Please try again later.', icon="🚨")
     # Add more archive and references
