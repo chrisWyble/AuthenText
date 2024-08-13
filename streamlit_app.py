@@ -207,7 +207,7 @@ elif st.session_state.section == "Citations":
 elif st.session_state.section == "Archive":
     st.header("Archive")
     archive_df = utils.view_archive()
-    if archive_df:
+    if archive_df is not None:
         st.dataframe(archive_df)
     else:
         st.error('Could not access archive. Please try again later.', icon="🚨")
