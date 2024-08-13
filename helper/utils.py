@@ -1,26 +1,30 @@
-from imports import st, PdfReader,\
-    requests, boto3, pd, os, StringIO
+import os
+import requests
+import boto3
+import pandas as pd
 
-def view_pdf(files):
-    # Read PDF
-    pdf_reader = PdfReader(files[0])
+from PyPDF2 import PdfReader
+from dotenv import load_dotenv
+from botocore.exceptions import NoCredentialsError
 
-    # Display PDF content (first page for example)
-    first_page = pdf_reader.pages[0].extract_text()
-    st.markdown(f"First page of {files[0].name}:")
-    st.text_area("", first_page, height=250)
-    
+
+load_dotenv('./.env')
+
+INSTANCE_ID = os.getenv('instance_id')
+REGION_NAME = os.getenv('region_name')
 
 
 # Function to get the public IP of the second EC2 instance
-def get_ec2_public_ip(instance_id='i-0800501d08d7bdc6f', region_name='us-east-1'):
+def get_ec2_public_ip(instance_id, region_name):
     ec2 = boto3.client('ec2', region_name=region_name)
     response = ec2.describe_instances(InstanceIds=[instance_id])
+
     status = response['Reservations'][0]['Instances'][0]['State']['Name']
     if status in ['running','stopping']:
         return response['Reservations'][0]['Instances'][0]['PublicIpAddress']
     return response['Reservations'][0]['Instances'][0]#['PrivateIpAddress']
 
+ 
 
 def extract_contents(files):
     lst = []
@@ -31,23 +35,29 @@ def extract_contents(files):
         lst.append(file_content)
     return lst
 
-def run_binoculars(files, verbose=True):
+def run_binoculars(files):
     # Get the LLM server IP dynamically
-    llm_server_ip = get_ec2_public_ip()
-    LLM_SERVER_URL = f'http://{llm_server_ip}:5000/predict'
-    
-    text_lst = extract_contents(files)
-    
     try:
+        llm_server_ip = get_ec2_public_ip(INSTANCE_ID, REGION_NAME)
+        LLM_SERVER_URL = f'http://{llm_server_ip}:5000/predict'
+        
+        text_lst = extract_contents(files)
+        
+
         response = requests.post(LLM_SERVER_URL, json={'text': text_lst}) 
         response_data = response.json()
         return response_data['response']
     except requests.exceptions.RequestException as e:
-        return {'error': str(e)}
+        return None
+    except NoCredentialsError as e:
+        return None
+    except Exception as e:
+        raise e
+
 
 def archive(creds, files, mgt_status):
     # Get the LLM server IP dynamically
-    llm_server_ip = get_ec2_public_ip()
+    llm_server_ip = get_ec2_public_ip(INSTANCE_ID, REGION_NAME)
     LLM_SERVER_URL = f'http://{llm_server_ip}:5000/archive'
     
     filenames = [f'{creds[0]}/{creds[1]}_{creds[2]}__{f.name[:-4]}' for f in files]
@@ -63,22 +73,26 @@ def archive(creds, files, mgt_status):
         return {'error': str(e)}
 
 def view_archive():
-    
-    llm_server_ip = get_ec2_public_ip()
-    LLM_SERVER_URL = f'http://{llm_server_ip}:5000/view_archive'
-    
     try:
+        llm_server_ip = get_ec2_public_ip(INSTANCE_ID, REGION_NAME)
+        LLM_SERVER_URL = f'http://{llm_server_ip}:5000/view_archive'
+        
+    
         response = requests.get(LLM_SERVER_URL) 
         response_data = response.json()
         res = response_data['response']
         
     except requests.exceptions.RequestException as e:
-        return {'error': str(e)}
-    
-    df = pd.DataFrame(res)
-    df.set_index('Student ID', inplace=True)
-    st.dataframe(df)
-    
+        return None
+    except NoCredentialsError as e:
+        return None
+    else:
+
+        df = pd.DataFrame(res)
+        df.set_index('Student ID', inplace=True)
+        
+        return df
+        
         
 
 
