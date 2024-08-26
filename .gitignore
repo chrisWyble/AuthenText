@@ -1,6 +1,5 @@
 ## Custom entries
 *.pdf
-style.py
 
 # Jupyter Notebook
 .ipynb_checkpoints
